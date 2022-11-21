@@ -5,6 +5,7 @@ import torch.utils.data
 import numpy as np
 from PIL import Image
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 #Creating Custom DataSet Class
 class stopNotStopData(Dataset):
@@ -169,3 +170,20 @@ def train_model(model, device, n_epochs, train_loader, validation_loader, optimi
         accuracy_list.append(accuracy)
         print('Epoch ' + str(epoch+1) + 'Finished!')
     return model, cost_list, accuracy_list
+
+def plot_prediction(model, x_test):
+    x_test = torch.unsqueeze(x_test, dim=0)
+
+    #Making prediction
+    z = model(x_test)
+
+    x_test = torch.squeeze(x_test, dim=0)
+    x_test = x_test.moveaxis(0,-1)
+
+    plt.imshow(x_test)
+    if z < 0.5:
+        plt.title('Prediction: STOP')
+    else:
+        plt.title('Prediction: NOT-STOP')
+    plt.show()
+
